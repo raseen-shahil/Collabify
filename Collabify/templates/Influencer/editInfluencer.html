@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% block head %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .top-nav {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-logo {
+            background: #2563eb;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-decoration: none;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px;
+            border: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .primary-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .danger-btn {
+            background: #dc2626;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .col {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+        }
+
+        .form-field {
+            margin-bottom: 1.5rem;
+        }
+
+        .cc-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+        }
+
+        .cc-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .cc-input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        select.cc-input {
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 9999px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-nav {
+                padding: 1rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+    <div class="brand">
+        <a href="{{ url_for('influencer.dashboard') }}" class="brand-logo">AD<br>FL</a>
+    </div>
+    <div class="nav-actions">
+        <a href="{{ url_for('influencer.viewCampaigns') }}" class="nav-btn primary-btn">Find Campaigns</a>
+        <form action="{{ url_for('influencer.deleteInfluencer', influencer_id=influencer.id) }}" 
+              method="POST" 
+              onsubmit="return confirm('Are you sure you want to delete your profile?');"
+              style="display: inline;">
+            <button class="nav-btn danger-btn" type="submit">Delete Profile</button>
+        </form>
+        <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+    <form method="POST" enctype="multipart/form-data">
+        <div class="content-wrapper">
+            <div class="col">
+                <div class="header">
+                    <h1>Personal Information</h1>
+                </div>
+                <div class="form-field">
+                    <label class="cc-label" for="name">Name</label>
+                    <input type="text" id="name" class="cc-input" name="name" value="{{ influencer.name }}" required />
+                </div>
+
+                <div class="form-field">
+                    <label class="cc-label" for="email">Email</label>
+                    <input type="email" id="email" name="email" class="cc-input" value="{{ influencer.email }}" required />
+                </div>
+
+                <div class="form-field">
+                    <label class="cc-label" for="platform">Platform</label>
+                    <select class="cc-input" name="platform" id="platform">
+                        <option value="{{influencer.platform}}">{{influencer.platform}}</option>
+                        <option value="Facebook">Facebook</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="Twitter">Twitter</option>
+                        <option value="LinkedIn">LinkedIn</option>
+                        <option value="Youtube">Youtube</option>
+                        <option value="Snapchat">Snapchat</option>
+                        <option value="TikTok">TikTok</option>
+                        <option value="Twitch">Twitch</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label class="cc-label" for="profile_picture">Profile Picture</label>
+                    <input class="cc-input" value="{{ influencer.profile_picture }}" type="file" id="profile_picture" name="profile_picture" />
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="header">
+                    <h1>Professional Details</h1>
+                </div>
+                <div class="form-field">
+                    <label class="cc-label" for="niche">Niche</label>
+                    <select class="cc-input" id="niche" name="niche">
+                        <option value="{{influencer.niche}}">{{influencer.niche}}</option>
+                        <option value="Tech">Tech</option>
+                        <option value="Fashion and Beauty">Fashion and Beauty</option>
+                        <option value="Fitness and Wellness">Fitness and Wellness</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Food">Food</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                        <option value="Gaming">Gaming</option>
+                        <option value="Finance and Investing">Finance and Investing</option>
+                        <option value="Entertainment and Pop Culture">Entertainment and Pop Culture</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label class="cc-label" for="reach">Reach</label>
+                    <input class="cc-input" type="number" id="reach" name="reach" value="{{ influencer.reach }}" required />
+                </div>
+
+                <div class="form-field" style="margin-top: 2rem;">
+                    <button type="submit" class="submit-btn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Ad Request</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .top-nav {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            background: #2563eb;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-decoration: none;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px;
+            border: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .primary-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .danger-btn {
+            background: #dc2626;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .form-wrapper {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            margin-top: 2rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: #1f2937;
+        }
+
+        .form-fields {
+            display: grid;
+            gap: 1.5rem;
+            max-width: 600px;
+        }
+
+        .form-field {
+            margin-top: 0.5rem;
+        }
+
+        .cc-label {
+            font-weight: 500;
+            color: #374151;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .cc-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .cc-input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .submit-btn {
+            background: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 9999px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .top-nav {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="brand">
+            <a href="{{ url_for('influencer.dashboard') }}" class="brand-logo">AD<br>FL</a>
+        </div>
+        <div class="nav-actions">
+            <a href="{{ url_for('influencer.viewCampaigns') }}" class="nav-btn primary-btn">Find Campaigns</a>
+            <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-wrapper">
+            <form action="{{ url_for('influencer.create_ad_request', campaign_id=campaign.id) }}" method="POST">
+                <h1>Create Ad Request for {{ campaign.name }}</h1>
+                
+                <div class="form-fields">
+                    <div>
+                        <label class="cc-label" for="requirements">Task</label>
+                        <div class="form-field">
+                            <input class="cc-input" id="requirements" name="requirements" required />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="cc-label" for="messages">Message</label>
+                        <div class="form-field">
+                            <input class="cc-input" id="messages" name="messages" required />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="cc-label" for="payment_amount">Request Amount</label>
+                        <div class="form-field">
+                            <input type="number" class="cc-input" id="payment_amount" name="payment_amount" step="1" required />
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="submit-btn">Create Ad Request</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

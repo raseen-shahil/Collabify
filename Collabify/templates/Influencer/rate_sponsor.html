@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .top-nav {
+        background: white;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .brand-logo {
+        background: #2563eb;
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        text-decoration: none;
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    .nav-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .nav-btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 9999px;
+        border: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .primary-btn {
+        background: #2563eb;
+        color: white;
+    }
+
+    .danger-btn {
+        background: #dc2626;
+        color: white;
+    }
+
+    .content-wrapper {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+        margin-top: 2rem;
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .form-header h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .form-field {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-field label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #4b5563;
+    }
+
+    .form-field input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-field input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 0.75rem;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+        
+        .top-nav {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav class="top-nav">
+        <a href="{{ url_for('influencer.dashboard') }}" class="brand-logo">
+            AD<br>FL
+        </a>
+        <div class="nav-actions">
+            <a href="{{ url_for('influencer.viewCampaigns') }}" class="nav-btn primary-btn">Find Campaigns</a>
+            <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        <div class="form-header">
+            <h1>Rate {{user_name}}</h1>
+        </div>
+        
+        <form method="POST">
+            <div class="form-field">
+                <label for="rating">Rating (1-5)</label>
+                <input
+                    type="number"
+                    id="rating"
+                    name="rating"
+                    min="1"
+                    max="5"
+                    required
+                />
+            </div>
+
+            <div class="form-field">
+                <label for="review">Review</label>
+                <input 
+                    type="text"
+                    id="review"
+                    name="review"
+                    required
+                />
+            </div>
+
+            <button type="submit" class="submit-btn">
+                Submit Rating
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

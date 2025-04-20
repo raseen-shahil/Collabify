@@ -1,0 +1,492 @@
+{% extends "base.html" %}
+{% block head %}
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .nav-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .primary-btn {
+    background: #2563eb;
+    color: white;
+    border: 2px solid #2563eb;
+  }
+
+  .primary-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .primary-btn:hover {
+    color: #2563eb;
+  }
+
+  .primary-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+    border: 2px solid #dc2626;
+  }
+
+  .danger-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .danger-btn:hover {
+    color: #dc2626;
+  }
+
+  .danger-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+  }
+
+  .content-wrapper {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  }
+
+  .header {
+    margin-bottom: 2rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #dc2626;
+  }
+
+  .main-container {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 2rem;
+  }
+
+  .filter-card {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    border: 2px solid #e5e7eb;
+  }
+
+  .filter-card p {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #374151;
+  }
+
+  .filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group label {
+    font-size: 0.875rem;
+    color: #4b5563;
+    font-weight: 500;
+  }
+
+  .form-control {
+    padding: 0.5rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #2563eb;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .filter-btn {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .apply-btn {
+    background: #2563eb;
+    color: white;
+  }
+
+  .apply-btn:hover {
+    background: #1d4ed8;
+  }
+
+  .remove-btn {
+    background: #f3f4f6;
+    color: #4b5563;
+  }
+
+  .remove-btn:hover {
+    background: #e5e7eb;
+  }
+
+  .influencer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .influencer-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s ease;
+  }
+
+  .influencer-card {
+    position: relative;
+  }
+
+  .influencer-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #dc2626;
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  .influencer-card:hover {
+    transform: translateY(-5px);
+    border-color: #dc2626;
+  }
+
+  .profile-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 1rem;
+    display: block;
+  }
+
+  .influencer-name {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+    color: #1f2937;
+  }
+
+  .influencer-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .info-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .info-table td:first-child {
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .reinstate-btn {
+    padding: 0.5rem;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .reinstate-btn:hover {
+    background: #1d4ed8;
+  }
+
+  .delete-btn {
+    padding: 0.5rem;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .delete-btn:hover {
+    background: #b91c1c;
+  }
+
+  @media (max-width: 1024px) {
+    .main-container {
+      grid-template-columns: 1fr;
+    }
+
+    .filter-card {
+      position: sticky;
+      top: 90px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .container {
+      padding: 1rem;
+    }
+
+    .nav-actions {
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+
+    .top-nav {
+      padding: 0.75rem 1rem;
+    }
+
+    .influencer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <a href="{{ url_for('admin.dashboard') }}" class="brand-logo">AD</a>
+  
+  <div class="nav-actions">
+    <a href="{{ url_for('admin.view_influencers') }}" class="nav-btn primary-btn">
+      <ion-icon name="people-outline"></ion-icon>
+      View All Influencers
+    </a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">
+      <ion-icon name="log-out-outline"></ion-icon>
+      Logout
+    </a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="content-wrapper">
+    <div class="header">
+      <h1>All Flagged Influencers</h1>
+    </div>
+    
+    <div class="main-container">
+      <div class="filter-card">
+        <p>Filters</p>
+        <form class="filter-form" action="{{ url_for('admin.view_influencers') }}" method="get">
+          <div class="form-group">
+            <label for="reach">Minimum Reach</label>
+            <input type="number" id="reach" name="reach" class="form-control" />
+          </div>
+          
+          <div class="form-group">
+            <label for="niche">Niche</label>
+            <select class="form-control" id="niche" name="niche">
+              <option value="">Please select</option>
+              <option value="Tech">Tech</option>
+              <option value="Fashion and Beauty">Fashion and Beauty</option>
+              <option value="Fitness and Wellness">Fitness and Wellness</option>
+              <option value="Travel">Travel</option>
+              <option value="Food">Food</option>
+              <option value="Lifestyle">Lifestyle</option>
+              <option value="Gaming">Gaming</option>
+              <option value="Finance and Investing">Finance and Investing</option>
+              <option value="Entertainment and Pop Culture">Entertainment and Pop Culture</option>
+            </select>
+          </div>
+          
+          <div class="btn-group">
+            <button type="submit" class="filter-btn apply-btn">Apply</button>
+            <a href="{{ url_for('admin.view_all_influencers') }}">
+              <button type="button" class="filter-btn remove-btn">Remove</button>
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <div class="influencer-grid">
+        {% for influencer in influencers %}
+        <div class="influencer-card">
+          <img src="{{ url_for('static', filename='uploads/' + influencer.profile_picture) }}" 
+               alt="{{ influencer.name }}'s profile picture"
+               class="profile-img" />
+          
+          <h2 class="influencer-name">{{ influencer.name }}</h2>
+          
+          <div class="influencer-stats">
+            <p>{{ influencer.niche }}</p>
+            <p>Reach: {{ influencer.reach }}</p>
+          </div>
+          
+          <table class="info-table">
+            <tr>
+              <td>Email</td>
+              <td>{{ influencer.email }}</td>
+            </tr>
+            <tr>
+              <td>Platform</td>
+              <td>{{ influencer.platform }}</td>
+            </tr>
+            <tr>
+              <td>Rating</td>
+              <td>5.0</td>
+            </tr>
+          </table>
+          
+          <div class="action-buttons">
+            <form action="{{ url_for('admin.unflag_influencer', influencer_id=influencer.id) }}" method="POST">
+              <button type="submit" class="reinstate-btn">Reinstate</button>
+            </form>
+            
+            <form action="{{ url_for('admin.delete_influencer', influencer_id=influencer.id) }}" 
+                  method="POST" 
+                  onsubmit="return confirm('Are you sure you want to delete this influencer?');">
+              <button type="submit" class="delete-btn">Delete</button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

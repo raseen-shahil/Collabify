@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Previous styles remain unchanged */
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .nav-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .primary-btn {
+    background: #2563eb;
+    color: white;
+    border: 2px solid #2563eb;
+  }
+
+  .primary-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .primary-btn:hover {
+    color: #2563eb;
+  }
+
+  .primary-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+    border: 2px solid #dc2626;
+  }
+
+  .danger-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .danger-btn:hover {
+    color: #dc2626;
+  }
+
+  .danger-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    min-height: calc(100vh - 72px);
+  }
+
+  .content-wrapper {
+    margin-top: 2rem;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  .search-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+  }
+
+  .search-form {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+
+  .form-group {
+    flex: 1;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 0.625rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: #2563eb;
+  }
+
+  .campaigns-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .campaign-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .campaign-card:hover {
+    transform: translateY(-5px);
+    border-color: #e5e7eb;
+  }
+
+  .campaign-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+
+  .campaign-info {
+    margin-bottom: 1rem;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .info-row:last-child {
+    border-bottom: none;
+  }
+
+  .info-label {
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  .info-value {
+    color: #1f2937;
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  /* New styles for sponsor info */
+  .sponsor-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+  }
+
+  .sponsor-icon {
+    color: #2563eb;
+    font-size: 1.25rem;
+  }
+
+  .sponsor-name {
+    font-weight: 600;
+    color: #2563eb;
+    font-size: 0.875rem;
+  }
+
+  .campaign-description {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .description-text {
+    color: #64748b;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .campaign-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-start;
+  }
+  .sponsor-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+  }
+
+  .sponsor-icon {
+    color: #2563eb;
+    font-size: 1.25rem;
+  }
+
+  .sponsor-name {
+    font-weight: 600;
+    color: #2563eb;
+    font-size: 0.875rem;
+  }
+
+  .sponsor-email {
+    color: #64748b;
+    font-size: 0.75rem;
+    margin-left: auto;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+    
+    .search-form {
+      flex-direction: column;
+    }
+    
+    .campaigns-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .nav-actions {
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <a href="{{ url_for('admin.dashboard') }}" class="brand-logo">AD</a>
+  
+  <div class="nav-actions">
+    <a href="{{ url_for('admin.view_flagged_campaigns') }}" class="nav-btn primary-btn">
+      <ion-icon name="flag-outline"></ion-icon>
+      Flagged Campaigns
+    </a>
+    <a href="{{ url_for('admin.view_sponsors') }}" class="nav-btn primary-btn">
+      <ion-icon name="business-outline"></ion-icon>
+      View Sponsors
+    </a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">
+      <ion-icon name="log-out-outline"></ion-icon>
+      Logout
+    </a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="content-wrapper">
+    <div class="header">
+      <h1>All Campaigns</h1>
+    </div>
+
+    <div class="search-section">
+      <form action="{{url_for('admin.view_campaigns') }}" method="post" class="search-form">
+        <div class="form-group">
+          <label for="search_query">Campaign Name</label>
+          <input type="text" id="search_query" name="search_query" required placeholder="Search campaigns...">
+        </div>
+        <button type="submit" class="nav-btn primary-btn">
+          <ion-icon name="search-outline"></ion-icon>
+          Search
+        </button>
+      </form>
+    </div>
+
+    <div class="campaigns-grid">
+      {% for campaign in campaigns %}
+        {% if campaign.flagged == False %}
+        <div class="campaign-card">
+          <h2 class="campaign-name">{{ campaign.name }}</h2>
+          
+          <!-- Updated sponsor information section -->
+          <div class="sponsor-info">
+            <ion-icon name="business-outline" class="sponsor-icon"></ion-icon>
+            <span class="sponsor-name">{{ campaign.user.name }}</span>
+            <span class="sponsor-email">{{ campaign.user.email }}</span>
+          </div>
+          
+          <div class="campaign-info">
+            <div class="info-row">
+              <span class="info-label">Budget</span>
+              <span class="info-value">Rs. {{ campaign.budget }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Niche</span>
+              <span class="info-value">{{ campaign.niche }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Start Date</span>
+              <span class="info-value">{{ campaign.start_date.strftime('%Y-%m-%d') }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">End Date</span>
+              <span class="info-value">{{ campaign.end_date.strftime('%Y-%m-%d') }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Visibility</span>
+              <span class="info-value">{{ campaign.visibility }}</span>
+            </div>
+          </div>
+
+          <div class="campaign-description">
+            <p class="description-text">{{ campaign.description }}</p>
+            <p class="description-text" style="margin-top: 0.5rem;">
+              <strong>Goals:</strong> {{ campaign.goals }}
+            </p>
+          </div>
+
+          <div class="campaign-actions">
+            <form action="{{ url_for('admin.flag_campaign', campaign_id=campaign.id) }}" method="POST">
+              <button type="submit" class="nav-btn danger-btn">
+                <ion-icon name="flag-outline"></ion-icon>
+                Flag as Inappropriate
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+{% endblock %}

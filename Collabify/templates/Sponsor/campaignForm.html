@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    animation: slideDown 0.5s ease-out;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .nav-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 9999px;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .primary-btn {
+    background: #2563eb;
+    color: white;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+  }
+
+  .nav-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .form-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    margin-top: 2rem;
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .form-header {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .form-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  select.form-input {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  .submit-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    border: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+  }
+
+  .submit-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  #niche-container.hidden {
+    display: none;
+  }
+
+  @keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .container {
+      padding: 1rem;
+    }
+
+    .form-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <div class="brand">
+    <div class="brand-logo">AD</div>
+  </div>
+  
+  <div class="nav-actions">
+    <a href="{{ url_for('sponsor.dashboard') }}" class="nav-btn primary-btn">Dashboard</a>
+    <a href="viewCampaigns" class="nav-btn primary-btn">Campaigns</a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="form-card">
+    <div class="form-header">
+      <h1>Create New Campaign</h1>
+    </div>
+
+    <form method="POST" id="campaignForm">
+      <div class="form-grid">
+        <div class="form-column">
+          <div class="form-group">
+            <label class="form-label" for="name">Campaign Name</label>
+            <input type="text" class="form-input" id="name" name="name" required placeholder="Enter campaign name">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="description">Description</label>
+            <input class="form-input" id="description" name="description" required placeholder="Enter campaign description">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="start_date">Start Date</label>
+            <input type="date" class="form-input" id="start_date" name="start_date" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="end_date">End Date</label>
+            <input type="date" class="form-input" id="end_date" name="end_date" required>
+          </div>
+        </div>
+
+        <div class="form-column">
+          <div class="form-group">
+            <label class="form-label" for="budget">Budget (₹)</label>
+            <input type="number" class="form-input" id="budget" name="budget" required placeholder="Enter budget amount" step="1">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="visibility">Visibility</label>
+            <select class="form-input" id="visibility" name="visibility" required>
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="niche-container" class="hidden">
+            <label class="form-label" for="niche">Niche</label>
+            <select class="form-input" id="niche" name="niche">
+              <option hidden value="All">All</option>
+              <option value="Tech">Tech</option>
+              <option value="Fashion and Beauty">Fashion and Beauty</option>
+              <option value="Fitness and Wellness">Fitness and Wellness</option>
+              <option value="Travel">Travel</option>
+              <option value="Food">Food</option>
+              <option value="Lifestyle">Lifestyle</option>
+              <option value="Gaming">Gaming</option>
+              <option value="Finance and Investing">Finance and Investing</option>
+              <option value="Entertainment and Pop Culture">Entertainment and Pop Culture</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="goals">Goals</label>
+            <input class="form-input" id="goals" name="goals" required placeholder="Enter campaign goals">
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-wrapper">
+        <button type="submit" class="submit-btn">
+          Create Campaign
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById("visibility").addEventListener("change", function() {
+    var nicheContainer = document.getElementById("niche-container");
+    if (this.value === "private") {
+      nicheContainer.classList.remove("hidden");
+    } else {
+      nicheContainer.classList.add("hidden");
+    }
+  });
+
+  document.getElementById("campaignForm").addEventListener("submit", function(event) {
+    const startDate = new Date(document.getElementById("start_date").value);
+    const endDate = new Date(document.getElementById("end_date").value);
+
+    if (startDate > endDate) {
+      event.preventDefault();
+      alert("End date must be after start date.");
+    }
+  });
+</script>
+{% endblock %}

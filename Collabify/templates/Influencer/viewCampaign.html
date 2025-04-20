@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% block head %}
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .top-nav {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-logo {
+            background: #2563eb;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-decoration: none;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px;
+            border: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .primary-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .danger-btn {
+            background: #dc2626;
+            color: white;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .col {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+        }
+
+        .header {
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .numbers {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .hr {
+            width: 2px;
+            height: 24px;
+            background-color: #e5e7eb;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            font-weight: 600;
+            color: #64748b;
+            width: 30%;
+        }
+
+        td {
+            color: #1f2937;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .top-nav {
+                padding: 1rem;
+            }
+
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-actions {
+                gap: 0.5rem;
+            }
+
+            .nav-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .numbers {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hr {
+                display: none;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <nav class="top-nav">
+        <div class="brand">
+            <a href="{{ url_for('influencer.dashboard') }}" class="brand-logo">AD<br>FL</a>
+        </div>
+        <div class="nav-actions">
+            <a href="{{ url_for('influencer.viewCampaigns') }}" class="nav-btn primary-btn">Find Campaigns</a>
+            <a href="{{ url_for('influencer.activeCampaigns') }}" class="nav-btn primary-btn">Active Campaigns</a>
+            <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="col-1 col">
+                <div class="header">
+                    <h1>Campaign Details</h1>
+                </div>
+                <div class="numbers">
+                    <p>Campaign Overview</p>
+                    <div class="hr"></div>
+                    <p>Basic Information</p>
+                </div>
+                <table class="first-table">
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ campaign.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ campaign.description }}</td>
+                    </tr>
+                    <tr>
+                        <th>Start Date</th>
+                        <td>{{ campaign.start_date.strftime('%Y-%m-%d') }}</td>
+                    </tr>
+                    <tr>
+                        <th>End Date</th>
+                        <td>{{ campaign.end_date.strftime('%Y-%m-%d') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Budget</th>
+                        <td>{{ campaign.budget }}</td>
+                    </tr>
+                    <tr>
+                        <th>Visibility</th>
+                        <td>{{ campaign.visibility }}</td>
+                    </tr>
+                    <tr>
+                        <th>Niche</th>
+                        <td>{{ campaign.niche }}</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="col-2 col">
+                <div class="header">
+                    <h1>Additional Information</h1>
+                </div>
+                <table class="second-table">
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ campaign.description }}</td>
+                    </tr>
+                    <tr>
+                        <th>Goals</th>
+                        <td>{{ campaign.goals }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

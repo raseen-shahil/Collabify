@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .nav-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 9999px;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .primary-btn {
+    background: #2563eb;
+    color: white;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+  }
+
+  .nav-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .payment-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+  }
+
+  .payment-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+  }
+
+  .payment-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .payment-header h1 {
+    font-size: 1.5rem;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-field {
+    margin-bottom: 1.5rem;
+  }
+
+  .cc-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+  }
+
+  .cc-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .cc-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .submit-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  @media (max-width: 768px) {
+    .payment-container {
+      padding: 1rem;
+    }
+    
+    .payment-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <div class="brand">
+    <div class="brand-logo">AD</div>
+  </div>
+  
+  <div class="nav-actions">
+    <a href="{{ url_for('sponsor.dashboard') }}" class="nav-btn primary-btn">Dashboard</a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+  </div>
+</nav>
+
+<div class="payment-container">
+  <div class="payment-card">
+    <div class="payment-header">
+      <h1>Make Payment to {{ad_request.influencer_name}}</h1>
+    </div>
+    
+    <form method="POST">
+      <input type="hidden" name="influencer_id" value="{{ request.args.get('influencer_id') }}" />
+      
+      <div class="form-field">
+        <label class="cc-label" for="card_number">Card Number</label>
+        <input
+          class="cc-input"
+          type="text"
+          id="card_number"
+          name="card_number"
+          pattern="\d{16}"
+          placeholder="1234 5678 9012 3456"
+          title="Card number must be 16 digits"
+          required
+        />
+      </div>
+
+      <div class="form-field">
+        <label class="cc-label" for="expiration_date">Expiration Date</label>
+        <input
+          class="cc-input"
+          type="date"
+          name="expiration_date"
+          id="expiration_date"
+          required
+        />
+      </div>
+
+      <div class="form-field">
+        <label class="cc-label" for="cvv">CVV</label>
+        <input
+          type="text"
+          class="cc-input"
+          id="cvv"
+          name="cvv"
+          pattern="\d{3}"
+          placeholder="123"
+          title="CVV must be 3 digits"
+          required
+        />
+      </div>
+
+      <button type="submit" class="submit-btn">
+        Complete Payment
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

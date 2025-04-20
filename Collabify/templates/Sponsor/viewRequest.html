@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    animation: slideDown 0.5s ease-out;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .nav-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 9999px;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .primary-btn {
+    background: #2563eb;
+    color: white;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+  }
+
+  .nav-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .content-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .col {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .header h1, .col-2 h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+    font-weight: 600;
+  }
+
+  .numbers {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    color: #64748b;
+  }
+
+  .hr {
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+  }
+
+  .table-wrapper, .table-wrapper-2 {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    background: #f8fafc;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #64748b;
+    font-size: 0.875rem;
+  }
+
+  td {
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+    font-size: 0.875rem;
+  }
+
+  tr {
+    transition: background 0.2s ease;
+  }
+
+  tr:hover {
+    background: #f1f5f9;
+  }
+
+  .link {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .danger {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .approve {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .content-wrapper {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+    
+    .nav-actions {
+      gap: 0.5rem;
+    }
+    
+    .nav-btn {
+      padding: 0.5rem 1rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <div class="brand">
+    <div class="brand-logo">AD</div>
+  </div>
+  
+  <div class="nav-actions">
+    <a href="{{ url_for('sponsor.dashboard') }}" class="nav-btn primary-btn">Dashboard</a>
+    <a href="{{ url_for('sponsor.createCampaign') }}" class="nav-btn primary-btn">Create Campaign</a>
+    <a href="{{ url_for('sponsor.viewCampaigns') }}" class="nav-btn primary-btn">View Campaigns</a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="content-wrapper">
+    <div class="col-1 col">
+      <div class="header">
+        <h1>Active Negotiations</h1>
+      </div>
+      <div class="numbers">
+        <p>Current Requests</p>
+        <div class="hr"></div>
+        <p>Pending Response</p>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Offered Amount</th>
+              <th>Action</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for negotiation in nego_details %}
+            {% if negotiation.status == "Pending" %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>₹{{ negotiation.offer_amount }}</td>
+              <td>
+                <form action="{{ url_for('sponsor.reject_negotiation',negotiation_id=negotiation.id)}}" method="post">
+                  <button class="link danger" type="submit">Reject</button>
+                </form>
+              </td>
+              <td>
+                <form action="{{ url_for('sponsor.accept_negotiation',negotiation_id=negotiation.id)}}" method="post">
+                  <button class="link approve" type="submit">Accept</button>
+                </form>
+              </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-2 col">
+      <h1>Negotiation History</h1>
+      <div class="table-wrapper-2">
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date/Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for negotiation in nego_details %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>₹{{ negotiation.offer_amount }}</td>
+              <td>{{ negotiation.status }}</td>
+              <td>{{ negotiation.created_at }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

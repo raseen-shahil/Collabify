@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    animation: slideDown 0.5s ease-out;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .nav-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 9999px;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .primary-btn {
+    background: #2563eb;
+    color: white;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+  }
+
+  .nav-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .ratings-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .ratings-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .ratings-header h1 {
+    font-size: 1.5rem;
+    color: #1f2937;
+    font-weight: 600;
+  }
+
+  .dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .dashboard-table th {
+    background: #f8fafc;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #64748b;
+    font-size: 0.875rem;
+  }
+
+  .dashboard-table td {
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+    font-size: 0.875rem;
+  }
+
+  .dashboard-table tr:nth-child(even) {
+    background: #f8fafc;
+  }
+
+  .dashboard-table tr {
+    transition: background 0.2s ease;
+  }
+
+  .dashboard-table tr:hover {
+    background: #f1f5f9;
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+    
+    .ratings-card {
+      padding: 1rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <div class="brand">
+    <div class="brand-logo">AD</div>
+  </div>
+  
+  <div class="nav-actions">
+    <a href="{{ url_for('sponsor.dashboard') }}" class="nav-btn primary-btn">Dashboard</a>
+    <a href="{{ url_for('sponsor.viewCampaigns') }}" class="nav-btn primary-btn">Campaigns</a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="ratings-card">
+    <div class="ratings-header">
+      <h1>Your Ratings</h1>
+    </div>
+    
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Ratee</th>
+          <th>Rating</th>
+          <th>Review</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rating in ratings %}
+        <tr>
+          <td>{{rating.rating.id}}</td>
+          <td>{{rating.influencer_name}}</td>
+          <td>{{rating.rating.rating}}</td>
+          <td>{{rating.rating.review}}</td>
+          <td>{{rating.rating.date.strftime('%Y-%m-%d')}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

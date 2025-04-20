@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if campaign else 'Create' }} Campaign{% endblock %}
+{% block body_class %}influencer{% endblock %}
+{% block content %}
+
+<nav class="top-nav">
+    <div class="brand">
+        <a href="#" class="brand-logo">AD<br>FL</a>
+    </div>
+    <div class="nav-actions">
+        <a href="{{ url_for('influencer.viewInfluencers') }}" class="nav-btn primary-btn">Influencers</a>
+        <a href="{{ url_for('influencer.activeCampaigns') }}" class="nav-btn primary-btn">Active Campaigns</a>
+        <a href="{{ url_for('influencer.viewCampaigns') }}" class="nav-btn primary-btn">Find Campaigns</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="content-wrapper">
+        <div class="col">
+            <h2 class="search-title">Search Results for "{{ search_query }}"</h2>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name of Sponsor</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Budget</th>
+                            <th>Campaign Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for campaign in campaigns %}
+                        <tr>
+                            <td>{{ campaign.name }}</td>
+                            <td>{{ campaign.start_date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ campaign.end_date.strftime('%Y-%m-%d') }}</td>
+                            <td>Rs. {{ campaign.budget }}</td>
+                            <td>{{ campaign.description }}</td>
+                            <td class="actions">
+                                <a href="{{ url_for('influencer.viewCampaign', campaign_id=campaign.id) }}" class="link view">View</a>
+                                <a href="{{ url_for('influencer.create_ad_request', campaign_id=campaign.id)}}" class="link approve">Request</a>
+                                <form action="{{ url_for('influencer.bookmark_campaign', campaign_id=campaign.id) }}" method="post" class="bookmark-form">
+                                    <button type="submit" class="bookmark-btn">
+                                        {% if campaign.is_bookmarked %}
+                                        <svg class="bookmark-icon filled" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                                        </svg>
+                                        {% else %}
+                                        <svg class="bookmark-icon" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" fill="none" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .top-nav {
+        background: white;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .brand-logo {
+        background: #2563eb;
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        text-decoration: none;
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    .nav-btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 9999px;
+        border: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .primary-btn {
+        background: #2563eb;
+        color: white;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .col {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    }
+
+    .search-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #1f2937;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .data-table th {
+        font-weight: 600;
+        color: #64748b;
+    }
+
+    .actions {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .link {
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+    }
+
+    .view {
+        color: #2563eb;
+        background: rgba(37, 99, 235, 0.1);
+    }
+
+    .approve {
+        color: #059669;
+        background: rgba(5, 150, 105, 0.1);
+    }
+
+    .bookmark-form {
+        display: inline;
+    }
+
+    .bookmark-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.25rem;
+    }
+
+    .bookmark-icon {
+        width: 24px;
+        height: 24px;
+        color: #7c6d46;
+    }
+
+    .bookmark-icon.filled {
+        fill: #7c6d46;
+    }
+
+    @media (max-width: 1024px) {
+        .container {
+            padding: 1rem;
+        }
+        
+        .top-nav {
+            padding: 1rem;
+        }
+
+        .actions {
+            flex-direction: column;
+        }
+    }
+</style>
+
+{% endblock %}

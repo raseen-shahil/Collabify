@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .nav-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .nav-btn ion-icon {
+    font-size: 1.1em;
+    transition: transform 0.3s ease;
+  }
+
+  .nav-btn:hover ion-icon {
+    transform: scale(1.1);
+  }
+
+  .primary-btn {
+    background: #2563eb;
+    color: white;
+    border: 2px solid #2563eb;
+  }
+
+  .primary-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .primary-btn:hover {
+    color: #2563eb;
+  }
+
+  .primary-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+    border: 2px solid #dc2626;
+  }
+
+  .danger-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .danger-btn:hover {
+    color: #dc2626;
+  }
+
+  .danger-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    min-height: calc(100vh - 72px);
+  }
+
+  .content-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .search-form {
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .search-group {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+
+  .form-group {
+    flex: 1;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.625rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+
+  .sponsors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 0.5rem;
+  }
+
+  .sponsor-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+
+  .sponsor-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  .sponsor-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .sponsor-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .sponsor-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex-grow: 1;
+  }
+
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+  }
+
+  .info-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .info-value {
+    font-size: 0.875rem;
+    color: #1f2937;
+  }
+
+  .sponsor-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: auto;
+  }
+
+  .sponsor-actions .nav-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  @media (max-width: 640px) {
+    .container {
+      padding: 1rem;
+    }
+    
+    .search-group {
+      flex-direction: column;
+    }
+    
+    .sponsors-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .nav-actions {
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+
+    .top-nav {
+      padding: 0.75rem 1rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <a href="{{ url_for('admin.dashboard') }}" class="brand-logo">AD</a>
+  
+  <div class="nav-actions">
+    <a href="{{ url_for('admin.view_flagged_sponsors') }}" class="nav-btn primary-btn">
+      <ion-icon name="flag-outline"></ion-icon>
+      View Flagged Sponsors
+    </a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">
+      <ion-icon name="log-out-outline"></ion-icon>
+      Logout
+    </a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="content-card">
+    <div class="card-header">
+      <h2 class="card-title">All Sponsors</h2>
+    </div>
+
+    <div class="search-form">
+      <form class="search-group">
+        <div class="form-group">
+          <label class="form-label">Sponsor Name:</label>
+          <input type="text" class="form-input" placeholder="Search by name...">
+        </div>
+        <button type="submit" class="nav-btn primary-btn">
+          <ion-icon name="search-outline"></ion-icon>
+          Search
+        </button>
+      </form>
+    </div>
+
+    <div class="sponsors-grid">
+      {% for sponsor in sponsors %}
+      {% if sponsor.flagged == False %}
+      <div class="sponsor-card">
+        <div class="sponsor-header">
+          <h3 class="sponsor-name">{{ sponsor.name }}</h3>
+        </div>
+        
+        <div class="sponsor-info">
+          <div class="info-item">
+            <span class="info-label">Email</span>
+            <span class="info-value">{{ sponsor.email }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Niche</span>
+            <span class="info-value">{{ sponsor.niche }}</span>
+          </div>
+        </div>
+
+        <div class="sponsor-actions">
+          <form action="{{ url_for('admin.flag_sponsor', user_id=sponsor.id) }}" method="POST">
+            <button class="nav-btn danger-btn">
+              <ion-icon name="flag-outline"></ion-icon>
+              Flag as Inappropriate
+            </button>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+{% endblock %}

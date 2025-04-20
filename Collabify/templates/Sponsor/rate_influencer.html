@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .nav-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 9999px;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .primary-btn {
+    background: #2563eb;
+    color: white;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+  }
+
+  .nav-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .rating-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+  }
+
+  .rating-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+  }
+
+  .rating-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .rating-header h1 {
+    font-size: 1.5rem;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-field {
+    margin-bottom: 1.5rem;
+  }
+
+  .cc-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+  }
+
+  .cc-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .cc-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    min-height: 100px;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+  }
+
+  .cc-input:focus,
+  .cc-textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .submit-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  @media (max-width: 768px) {
+    .rating-container {
+      padding: 1rem;
+    }
+    
+    .rating-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <div class="brand">
+    <div class="brand-logo">AD</div>
+  </div>
+  
+  <div class="nav-actions">
+    <a href="{{ url_for('sponsor.createCampaign') }}" class="nav-btn primary-btn">Create Campaign</a>
+    <a href="{{ url_for('sponsor.viewCampaigns') }}" class="nav-btn primary-btn">View Campaigns</a>
+    <a href="{{ url_for('sponsor.dashboard') }}" class="nav-btn primary-btn">Dashboard</a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+  </div>
+</nav>
+
+<div class="rating-container">
+  <div class="rating-card">
+    <div class="rating-header">
+      <h1>Rate {{influencer_name}}</h1>
+    </div>
+    
+    <form method="POST">
+      <div class="form-field">
+        <label class="cc-label" for="rating">Rating (1-5 stars)</label>
+        <input
+          type="number"
+          class="cc-input"
+          id="rating"
+          name="rating"
+          min="1"
+          max="5"
+          placeholder="Enter rating from 1 to 5"
+          required
+        />
+      </div>
+
+      <div class="form-field">
+        <label class="cc-label" for="review">Review</label>
+        <textarea
+          class="cc-textarea"
+          id="review"
+          name="review"
+          placeholder="Write your review here..."
+          required
+        ></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">
+        Submit Rating
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

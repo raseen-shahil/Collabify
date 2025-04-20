@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block head %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .top-nav {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-logo {
+            background: #2563eb;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-decoration: none;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px;
+            border: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .primary-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .danger-btn {
+            background: #dc2626;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .content-wrapper {
+            margin-top: 2rem;
+        }
+
+        .header-wrapper {
+            margin-bottom: 2rem;
+        }
+
+        .header-1 h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .link {
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .view {
+            color: #2563eb;
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .top-nav {
+                padding: 1rem;
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+    <div class="brand">
+        <a href="{{ url_for('influencer.dashboard') }}" class="brand-logo">AD<br>FL</a>
+    </div>
+    <div class="nav-actions">
+        <a href="{{ url_for('influencer.viewCampaigns') }}" class="nav-btn primary-btn">Find Campaigns</a>
+        <a href="{{ url_for('influencer.view_completed_requests')}}" class="nav-btn primary-btn">Completed Requests</a>
+        <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="content-wrapper">
+        <div class="header-wrapper">
+            <div class="header-1">
+                <h1>Active Campaigns</h1>
+            </div>
+        </div>
+        
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Request Type</th>
+                        <th>Campaign</th>
+                        <th>Sponsor</th>
+                        <th>Payment Amount</th>
+                        <th>Requirements</th>
+                        <th>Message</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in ad_requests + campaign_requests %}
+                        {% if request.request.status == "Accepted" %}
+                        <tr>
+                            <td>{{ request.request_type }}</td>
+                            <td>{{ request.campaign_name }}</td>
+                            <td>{{ request.user_name }}</td>
+                            <td>{{ request.request.payment_amount }}</td>
+                            <td>{{ request.request.requirements }}</td>
+                            <td>{{ request.request.messages }}</td>
+                            <td>
+                                <form method="POST" action="{{url_for('influencer.mark_completed', ad_request_id=request.request.id)}}">
+                                    <input type="text" name="request_type" value="{{ request.request_type }}" hidden>
+                                    <button class="link view" type="submit">Mark Completed</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

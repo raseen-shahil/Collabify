@@ -1,0 +1,414 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    animation: slideDown 0.5s ease-out;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+.nav-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .primary-btn {
+    background: #2563eb;
+    color: white;
+    border: 2px solid #2563eb;
+  }
+
+  .primary-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .primary-btn:hover {
+    color: #2563eb;
+  }
+
+  .primary-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+    border: 2px solid #dc2626;
+  }
+
+  .danger-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .danger-btn:hover {
+    color: #dc2626;
+  }
+
+  .danger-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .content-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .col-1 {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+  }
+
+  .header {
+    margin-bottom: 2rem;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    color: #1f2937;
+    font-weight: 600;
+  }
+
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-field {
+    margin-top: 0.5rem;
+  }
+
+  .cc-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+  }
+
+  .cc-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .cc-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+.submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #2563eb;
+    color: white;
+    border: 2px solid #2563eb;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .submit-btn:hover {
+    color: #2563eb;
+  }
+
+  .submit-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .submit-btn ion-icon {
+    font-size: 1.25rem;
+  }
+
+  .col-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .circle {
+    width: 200px;
+    height: 200px;
+    background: #2563eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .arrow {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+  }
+
+  .arrow svg path {
+    fill: white;
+  }
+
+  .arrow1 {
+    transform: rotate(-45deg) translate(-20px, -20px);
+  }
+
+  .arrow2 {
+    transform: rotate(135deg) translate(20px, 20px);
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .content-wrapper {
+      grid-template-columns: 1fr;
+    }
+    
+    .col-2 {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+    
+    .col-1 {
+      padding: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <div class="brand">
+    <div class="brand-logo">AD</div>
+  </div>
+  
+<div class="nav-actions">
+    <a href="{{ url_for('sponsor.createCampaign') }}" class="nav-btn primary-btn">
+      <ion-icon name="add-circle-outline"></ion-icon>
+      Create Campaign
+    </a>
+    <a href="{{ url_for('sponsor.viewCampaigns') }}" class="nav-btn primary-btn">
+      <ion-icon name="list-outline"></ion-icon>
+      View Campaigns
+    </a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">
+      <ion-icon name="log-out-outline"></ion-icon>
+      Logout
+    </a>
+  </div>
+</nav>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<div class="container">
+  <form action="{{ url_for('sponsor.create_ad_request', campaign_id=campaign.id) }}" method="POST">
+    <div class="content-wrapper">
+      <div class="col-1">
+        <div class="header">
+          <h1>Create Ad Request for {{ campaign.name }}</h1>
+        </div>
+        
+        <div class="form-fields">
+          <input type="hidden" name="influencer_id" value="{{ request.args.get('influencer_id') }}" />
+
+          <div>
+            <label class="cc-label" for="requirements">Requirements</label>
+            <div class="form-field">
+              <input class="cc-input" id="requirements" name="requirements" required 
+                     placeholder="Enter campaign requirements..." />
+            </div>
+          </div>
+
+          <div>
+            <label class="cc-label" for="messages">Messages</label>
+            <div class="form-field">
+              <input class="cc-input" id="messages" name="messages" required 
+                     placeholder="Enter your message..." />
+            </div>
+          </div>
+
+          <div>
+            <label class="cc-label" for="payment_amount">Payment Amount</label>
+            <div class="form-field">
+              <input type="number" class="cc-input" id="payment_amount" name="payment_amount" 
+                     step="1" required placeholder="Enter amount..." />
+            </div>
+          </div>
+
+          <div>
+<button type="submit" class="submit-btn">
+              Create Request
+              <ion-icon name="arrow-forward-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-2">
+        <div class="circle">
+          <div class="arrow arrow1">
+            <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 31">
+              <path d="M32.7188 30.2092L25.6611 30.1823L29.01 13.9866L12.2259 29.4822C11.7383 29.9323 11.099 30.1823 10.4353 30.1823H0.350586L24.5691 7.7427L9.97643 7.72816L12.817 1.29864C13.0989 0.660689 13.7309 0.24938 14.4283 0.250001L34.8251 0.268164C37.6565 0.269449 39.7495 2.90594 39.1084 5.66374L34.4507 28.7968C34.2848 29.6208 33.5593 30.2124 32.7188 30.2092Z"></path>
+            </svg>
+          </div>
+          <div class="arrow arrow2">
+            <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 31">
+              <path d="M32.7188 30.2092L25.6611 30.1823L29.01 13.9866L12.2259 29.4822C11.7383 29.9323 11.099 30.1823 10.4353 30.1823H0.350586L24.5691 7.7427L9.97643 7.72816L12.817 1.29864C13.0989 0.660689 13.7309 0.24938 14.4283 0.250001L34.8251 0.268164C37.6565 0.269449 39.7495 2.90594 39.1084 5.66374L34.4507 28.7968C34.2848 29.6208 33.5593 30.2124 32.7188 30.2092Z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,551 @@
+{% extends "base.html" %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .nav-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+    border: 2px solid #dc2626;
+  }
+
+  .danger-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .danger-btn:hover {
+    color: #dc2626;
+  }
+
+  .danger-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .warning-btn {
+    background: #eab308;
+    color: white;
+    border: 2px solid #eab308;
+  }
+
+  .warning-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .warning-btn:hover {
+    color: #eab308;
+  }
+
+  .warning-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Rest of the existing styles */
+  .main-content {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+  }
+
+  .filters-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    height: fit-content;
+  }
+
+  .filters-card h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.625rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #2563eb;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 0.625rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .btn-primary {
+    background: #2563eb;
+    color: white;
+    border: 2px solid #2563eb;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .btn-primary:hover {
+    color: #2563eb;
+  }
+
+  .btn-primary:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .btn-secondary {
+    background: #f3f4f6;
+    color: #4b5563;
+    border: 2px solid #e5e7eb;
+  }
+
+  .btn-secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #4b5563;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .btn-secondary:hover {
+    color: white;
+    border-color: #4b5563;
+  }
+
+  .btn-secondary:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .flag-btn {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #dc2626;
+    background: white;
+    color: #dc2626;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .flag-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #dc2626;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .flag-btn:hover {
+    color: white;
+  }
+
+  .flag-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Rest of your existing styles */
+  .influencers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .influencer-card {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+  }
+
+  .influencer-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .card-header {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .profile-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .profile-info h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+  }
+
+  .profile-info p {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .card-body {
+    padding: 1rem 1.5rem;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .stat-item ion-icon {
+    font-size: 1.25rem;
+    color: #6b7280;
+  }
+
+  .stat-item p {
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+
+  .card-footer {
+    padding: 1rem 1.5rem;
+    background: #f8fafc;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  @media (max-width: 1024px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .filters-card {
+      position: sticky;
+      top: 5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .main-content {
+      padding: 1rem;
+    }
+
+    .influencers-grid {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .top-nav {
+      padding: 0.75rem 1rem;
+    }
+
+    .nav-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+  }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<nav class="top-nav">
+  <a href="{{ url_for('admin.dashboard') }}" class="brand-logo">AD</a>
+  <div class="nav-actions">
+    <a href="{{ url_for('admin.view_flagged_influencers') }}" class="nav-btn warning-btn">
+      <ion-icon name="flag-outline"></ion-icon>
+      Flagged
+    </a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">
+      <ion-icon name="log-out-outline"></ion-icon>
+      Logout
+    </a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="page-header">
+    <h1>Influencers</h1>
+  </div>
+
+  <div class="content-grid">
+    <div class="filters-card">
+      <h2>
+        <ion-icon name="filter-outline"></ion-icon>
+        Filters
+      </h2>
+      <form action="{{ url_for('admin.view_influencers') }}" method="get">
+        <div class="form-group">
+          <label for="reach">Minimum Reach</label>
+          <input type="number" id="reach" name="reach" class="form-input" placeholder="Enter minimum reach" />
+        </div>
+
+        <div class="form-group">
+          <label for="niche">Niche</label>
+          <select class="form-input" id="niche" name="niche">
+            <option value="">Please select</option>
+            <option value="Tech">Tech</option>
+            <option value="Fashion and Beauty">Fashion and Beauty</option>
+            <option value="Fitness and Wellness">Fitness and Wellness</option>
+            <option value="Travel">Travel</option>
+            <option value="Food">Food</option>
+            <option value="Lifestyle">Lifestyle</option>
+            <option value="Gaming">Gaming</option>
+            <option value="Finance and Investing">Finance and Investing</option>
+            <option value="Entertainment and Pop Culture">Entertainment and Pop Culture</option>
+          </select>
+        </div>
+
+        <div class="btn-group">
+          <button type="submit" class="btn btn-primary">
+            <ion-icon name="checkmark-outline"></ion-icon>
+            Apply
+          </button>
+          <a href="{{ url_for('admin.view_all_influencers') }}" class="btn btn-secondary">
+            <ion-icon name="close-outline"></ion-icon>
+            Reset
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <div class="influencers-grid">
+      {% for influencer in influencers %}
+      {% if influencer.flagged == False %}
+      <div class="influencer-card">
+        <div class="card-header">
+          <img src="{{ url_for('static', filename='uploads/' + influencer.profile_picture) }}" 
+               alt="{{ influencer.name }}'s profile picture"
+               class="profile-image" />
+          <div class="profile-info">
+            <h3>{{ influencer.name }}</h3>
+            <p>{{ influencer.platform }}</p>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="stat-grid">
+            <div class="stat-item">
+              <ion-icon name="people-outline"></ion-icon>
+              <p>{{ influencer.reach }} followers</p>
+            </div>
+            <div class="stat-item">
+              <ion-icon name="star-outline"></ion-icon>
+              <p>Rating: {{ influencer.rating }}</p>
+            </div>
+            <div class="stat-item">
+              <ion-icon name="pricetag-outline"></ion-icon>
+              <p>{{ influencer.niche }}</p>
+            </div>
+            <div class="stat-item">
+              <ion-icon name="mail-outline"></ion-icon>
+              <p>{{ influencer.email }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <form action="{{ url_for('admin.flag_influencer', influencer_id=influencer.id) }}" method="POST">
+            <button type="submit" class="flag-btn">
+              <ion-icon name="flag-outline"></ion-icon>
+              Flag as Inappropriate
+            </button>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</main>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+{% endblock %}

@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .nav-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+    border: 2px solid #dc2626;
+  }
+
+  .danger-btn:hover {
+    background: white;
+    color: #dc2626;
+  }
+
+  .main-content {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .content-wrapper {
+    display: grid;
+    grid-template-columns: 1.75fr 1fr;
+    gap: 2rem;
+    height: calc(100vh - 140px);
+  }
+
+  .col-1, .col-2 {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .chart-container {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .pie-section {
+    height: 45%;
+    margin-bottom: 2rem;
+  }
+
+  .pie-section h1 {
+    color: #64748b;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .table-wrapper {
+    background: white;
+    border-radius: 0.75rem;
+    overflow: auto;
+    height: 45%;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #64748b;
+    position: sticky;
+    top: 0;
+  }
+
+  td {
+    color: #1f2937;
+  }
+
+  @media (max-width: 1280px) {
+    .content-wrapper {
+      grid-template-columns: 1fr;
+      height: auto;
+      gap: 1.5rem;
+    }
+
+    .col-1, .col-2 {
+      height: auto;
+    }
+
+    .chart-container {
+      height: 400px;
+    }
+
+    .pie-section {
+      height: 300px;
+    }
+
+    .table-wrapper {
+      height: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .main-content {
+      padding: 1rem;
+    }
+
+    .chart-container {
+      height: 300px;
+    }
+
+    .pie-section {
+      height: 250px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .top-nav {
+      padding: 0.75rem 1rem;
+    }
+
+    .nav-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+
+    .chart-container {
+      height: 250px;
+    }
+
+    .pie-section {
+      height: 200px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <a href="{{ url_for('admin.dashboard') }}" class="brand-logo">AD</a>
+  <div class="nav-actions">
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">
+      <ion-icon name="log-out-outline"></ion-icon>
+      Logout
+    </a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="content-wrapper">
+    <div class="col-1">
+      <div class="chart-container">
+        <canvas id="sponsors_by_niche"></canvas>
+      </div>
+    </div>
+
+    <div class="col-2">
+      <div class="pie-section">
+        <h1>Transactions by Request Type</h1>
+        <div class="chart-container">
+          <canvas id="transaction_by_request"></canvas>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <tr>
+            <th>Total Sponsors:</th>
+            <td>{{sponsor_count}}</td>
+          </tr>
+          <tr>
+            <th>Transaction Count</th>
+            <td>{{transaction_count}}</td>
+          </tr>
+          <tr>
+            <th>Total Transaction Amount</th>
+            <td>Rs. {{total_transaction_amount}}</td>
+          </tr>
+          <tr>
+            <th>Most Popular Niche</th>
+            <td>{{most_populated_niche}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script>
+  // Bar Chart
+  const sponsorsChart = new Chart(
+    document.getElementById("sponsors_by_niche"),
+    {
+      type: "bar",
+      data: {
+        labels: {{sponsor_by_niche_labels | safe}},
+        datasets: [{
+          label: "Sponsors by niche",
+          data: {{sponsor_by_niche_values | safe}},
+          backgroundColor: [
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 99, 132, 0.2)'
+          ],
+          borderColor: [
+            'rgba(75, 192, 192, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(255, 99, 132, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    }
+  );
+
+  // Pie Chart
+  const transactionChart = new Chart(
+    document.getElementById("transaction_by_request"),
+    {
+      type: "pie",
+      data: {
+        labels: {{transaction_by_request_type_labels | safe}},
+        datasets: [{
+          data: {{transaction_by_request_type_values | safe}},
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          hoverOffset: 16,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              boxWidth: 12,
+              padding: 8,
+              font: {
+                size: 11
+              }
+            }
+          }
+        }
+      }
+    }
+  );
+</script>
+{% endblock %}

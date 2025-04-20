@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: #f3f4f6;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+  }
+
+  .left-side {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    padding: 2rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero-text {
+    position: relative;
+    z-index: 1;
+    color: white;
+    padding-left: 3rem;
+  }
+
+  .login-text {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+  }
+
+  .welcome {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .right-side {
+    background: white;
+    padding: 2rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  form {
+    width: 100%;
+    max-width: 450px;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .form-field-wrapper {
+    margin-bottom: 1.5rem;
+  }
+
+  .label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    background-color: white;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  .signup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .signup-btn {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .signup-btn:hover {
+    text-decoration: underline;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn:hover {
+    background: #1d4ed8;
+  }
+
+  @media (max-width: 1024px) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+
+    .left-side {
+      padding: 4rem 2rem;
+    }
+
+    .hero-text {
+      padding-left: 0;
+      text-align: center;
+    }
+
+    .welcome {
+      font-size: 2.5rem;
+    }
+
+    .right-side {
+      padding: 2rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .left-side {
+      padding: 2rem 1rem;
+    }
+
+    .welcome {
+      font-size: 2rem;
+    }
+
+    .right-side {
+      padding: 1.5rem;
+    }
+
+    form {
+      padding: 0;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <div class="left-side">
+    <div class="hero-text">
+      <div class="login-text">Welcome!</div>
+      <div class="welcome">CREATE YOUR</div>
+      <div class="welcome">ACCOUNT</div>
+      <div class="welcome">TODAY</div>
+    </div>
+  </div>
+  
+  <div class="right-side">
+    <form method="POST">
+<h1 class="title">Collabify</h1>
+      
+      <div class="form-field-wrapper">
+        <label for="firstName" class="label">NAME</label>
+        <input type="text" id="firstName" name="firstName" required />
+      </div>
+      
+      <div class="form-field-wrapper">
+        <label class="label" for="email">EMAIL</label>
+        <input type="email" name="email" id="email" required />
+      </div>
+      
+      <div class="form-field-wrapper">
+        <label class="label" for="role">ROLE</label>
+        <select name="role" id="role" required>
+          <option value="Sponsor">Sponsor</option>
+          <option value="Influencer">Influencer</option>
+        </select>
+      </div>
+      
+      <div class="form-field-wrapper">
+        <label for="niche" class="label">NICHE</label>
+        <select name="niche" id="niche" required>
+          <option value="">Please select</option>
+          <option value="Tech">Tech</option>
+          <option value="Fashion and Beauty">Fashion and Beauty</option>
+          <option value="Fitness and Wellness">Fitness and Wellness</option>
+          <option value="Travel">Travel</option>
+          <option value="Food">Food</option>
+          <option value="Lifestyle">Lifestyle</option>
+          <option value="Gaming">Gaming</option>
+          <option value="Finance and Investing">Finance and Investing</option>
+          <option value="Entertainment and Pop Culture">Entertainment and Pop Culture</option>
+        </select>
+      </div>
+      
+      <div class="form-field-wrapper">
+        <label class="label" for="password1">PASSWORD</label>
+        <input type="password" name="password1" id="password1" required />
+      </div>
+      
+      <div class="form-field-wrapper">
+        <label class="label" for="password2">CONFIRM PASSWORD</label>
+        <input type="password" name="password2" id="password2" required />
+      </div>
+      
+      <div class="form-field-wrapper">
+        <div class="signup">
+          <label for="signup">Already have an account?</label>
+          <a href="{{ url_for('views.login') }}" class="signup-btn">Login</a>
+        </div>
+        <button type="submit" class="btn">
+          Create Account
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+{% endblock %}

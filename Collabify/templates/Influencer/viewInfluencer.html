@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+{% block head %}
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .top-nav {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-logo {
+            background: #2563eb;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-decoration: none;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e5e7eb;
+        }
+
+        .profile-info h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .detail-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px;
+            border: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .primary-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .secondary-btn {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .danger-btn {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .delete-form {
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body_class %}influencer{% endblock %}
+
+{% block content %}
+    <nav class="top-nav">
+        <div class="brand">
+            <a href="{{ url_for('influencer.dashboard') }}" class="brand-logo">AD<br>FL</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-image">
+                    {% if influencer.profile_picture %}
+                        <img src="{{ url_for('static', filename='uploads/' + influencer.profile_picture) }}" 
+                             alt="{{ influencer.name }}'s profile picture"
+                             class="profile-picture">
+                    {% else %}
+                        <div class="profile-picture" style="background: #e5e7eb; display: flex; align-items: center; justify-content: center;">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="profile-info">
+                    <h2>{{ influencer.name }}</h2>
+                    <p class="detail-value">{{ influencer.niche }} Influencer</p>
+                </div>
+            </div>
+
+            <div class="profile-details">
+                <div class="detail-item">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value">{{ influencer.email }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Reach</span>
+                    <span class="detail-value">{{ influencer.reach }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Niche</span>
+                    <span class="detail-value">{{ influencer.niche }}</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a href="{{ url_for('influencer.dashboard') }}" class="btn secondary-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Back to Dashboard
+                </a>
+                <a href="{{ url_for('influencer.editInfluencer', influencer_id=influencer.id) }}" class="btn primary-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    Edit Profile
+                </a>
+                <form class="delete-form" action="{{ url_for('influencer.deleteInfluencer', influencer_id=influencer.id) }}" 
+                      method="POST" onsubmit="return confirm('Are you sure you want to delete your profile?');">
+                    <button type="submit" class="btn danger-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            <line x1="10" y1="11" x2="10" y2="17"/>
+                            <line x1="14" y1="11" x2="14" y2="17"/>
+                        </svg>
+                        Delete Profile
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

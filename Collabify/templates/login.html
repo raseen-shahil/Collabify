@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 1000px;
+    background: white;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+  }
+
+  .login-left {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .brand-logo {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  .login-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .login-subheading {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 80%;
+    line-height: 1.6;
+  }
+
+  .login-right {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .form-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: #1f2937;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+
+  select.form-control {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .login-btn:hover {
+    background: #1d4ed8;
+  }
+
+  .signup-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .signup-link a {
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: 0.25rem;
+  }
+
+  .signup-link a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .login-container {
+      grid-template-columns: 1fr;
+      max-width: 400px;
+      margin: 1rem;
+    }
+
+    .login-left {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .login-subheading {
+      max-width: 100%;
+    }
+
+    .login-right {
+      padding: 2rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+  <div class="login-left">
+<div class="brand-logo">Collabify</div>
+    <h1 class="login-heading">Welcome Back!</h1>
+    <p class="login-subheading">Connect with top influencers and brands to create impactful campaigns</p>
+  </div>
+  
+  <div class="login-right">
+    <h2 class="form-title">Sign in to your account</h2>
+    <form method="POST">
+      <div class="form-group">
+        <label class="form-label" for="role">ROLE</label>
+        <select class="form-control" name="role" id="role">
+          <option value="Sponsor">Sponsor</option>
+          <option value="Influencer">Influencer</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="email">EMAIL</label>
+        <input class="form-control" type="email" name="email" id="email" required />
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="password">PASSWORD</label>
+        <input class="form-control" type="password" name="password" id="password" required />
+      </div>
+      
+      <button type="submit" class="login-btn">
+        Sign In
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </button>
+      
+      <div class="signup-link">
+        Don't have an account?<a href="{{ url_for('views.sign_up') }}">Sign up</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+{% endblock %}

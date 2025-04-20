@@ -1,0 +1,427 @@
+{% extends "base.html" %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .nav-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+    border: 2px solid #dc2626;
+  }
+
+  .danger-btn:hover {
+    background: white;
+    color: #dc2626;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  .content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.5rem;
+  }
+
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .chart-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-container {
+    position: relative;
+    flex: 1;
+    min-height: 0; /* Important for proper sizing */
+  }
+
+  .chart-heading {
+    color: #64748b;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .chart-heading ion-icon {
+    font-size: 1.25rem;
+  }
+
+  .bar-chart-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stats-table {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    height: fit-content;
+  }
+
+  .stats-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .stats-table th,
+  .stats-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    font-size: 0.875rem;
+  }
+
+  .stats-table th {
+    color: #64748b;
+    font-weight: 600;
+  }
+
+  .stats-table td {
+    font-weight: 500;
+    color: #1f2937;
+  }
+
+  .stats-table tr:last-child th,
+  .stats-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  @media (max-width: 1200px) {
+    .content-wrapper {
+      grid-template-columns: 1fr;
+    }
+    
+    .chart-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stats-table {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+    
+    .chart-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .chart-card,
+    .bar-chart-card {
+      height: 300px;
+    }
+    
+    .nav-actions {
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+
+    .top-nav {
+      padding: 0.75rem 1rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <a href="{{ url_for('admin.dashboard') }}" class="brand-logo">AD</a>
+  
+  <div class="nav-actions">
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">
+      <ion-icon name="log-out-outline"></ion-icon>
+      Logout
+    </a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="content-wrapper">
+    <div>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h2 class="chart-heading">
+            <ion-icon name="eye-outline"></ion-icon>
+            Campaigns by Visibility
+          </h2>
+          <div class="chart-container">
+            <canvas id="camapigns_by_visibility"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <h2 class="chart-heading">
+            <ion-icon name="stats-chart-outline"></ion-icon>
+            Ad Requests by Status
+          </h2>
+          <div class="chart-container">
+            <canvas id="ads_by_status"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <h2 class="chart-heading">
+            <ion-icon name="card-outline"></ion-icon>
+            Ad Requests by Payment
+          </h2>
+          <div class="chart-container">
+            <canvas id="ads_by_payment_status"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="bar-chart-card">
+        <h2 class="chart-heading">
+          <ion-icon name="pie-chart-outline"></ion-icon>
+          Campaigns by Niche
+        </h2>
+        <div class="chart-container">
+          <canvas id="campaign_by_niche"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-table">
+      <table>
+        <tr>
+          <th>Total Campaigns</th>
+          <td>{{ campaign_count }}</td>
+        </tr>
+        <tr>
+          <th>Total Budget</th>
+          <td>Rs. {{total_budget}}</td>
+        </tr>
+        <tr>
+          <th>Average Campaign Budget</th>
+          <td>Rs. {{average_campaign_budget}}</td>
+        </tr>
+        <tr>
+          <th>Total Ad Requests</th>
+          <td>{{total_request_count}}</td>
+        </tr>
+        <tr>
+          <th>Bookmarked Campaigns</th>
+          <td>{{bookmark_count}}</td>
+        </tr>
+        <tr>
+          <th>Popular Niches</th>
+          <td>
+            {{first_most_populated_niche}}<br>
+            {{second_most_populated_niche}}
+          </td>
+        </tr>
+        <tr>
+          <th>Top Influencer Niche</th>
+          <td>{{most_popular_influencer_niche}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<script>
+  // Common chart options
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          boxWidth: 12,
+          padding: 8,
+          font: {
+            size: 11
+          }
+        }
+      }
+    }
+  };
+
+  // Common colors
+  const colors = {
+    backgroundColor: [
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(255, 206, 86, 0.2)',
+      'rgba(153, 102, 255, 0.2)',
+      'rgba(255, 159, 64, 0.2)',
+      'rgba(255, 99, 132, 0.2)'
+    ],
+    borderColor: [
+      'rgba(75, 192, 192, 1)',
+      'rgba(54, 162, 235, 1)',
+      'rgba(255, 206, 86, 1)',
+      'rgba(153, 102, 255, 1)',
+      'rgba(255, 159, 64, 1)',
+      'rgba(255, 99, 132, 1)'
+    ]
+  };
+
+  // Create charts after DOM is fully loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    // Ads by Status Chart
+    new Chart(document.getElementById("ads_by_status"), {
+      type: "doughnut",
+      data: {
+        labels: {{ads_by_status_labels | safe}},
+        datasets: [{
+          data: {{ads_by_status_values | safe}},
+          backgroundColor: colors.backgroundColor,
+          borderColor: colors.borderColor,
+          borderWidth: 1
+        }]
+      },
+      options: chartOptions
+    });
+
+    // Campaigns by Visibility Chart
+    new Chart(document.getElementById("camapigns_by_visibility"), {
+      type: "doughnut",
+      data: {
+        labels: {{campaign_by_visibility_labels | safe}},
+        datasets: [{
+          data: {{campaign_by_visibility_values | safe}},
+          backgroundColor: colors.backgroundColor,
+          borderColor: colors.borderColor,
+          borderWidth: 1
+        }]
+      },
+      options: chartOptions
+    });
+
+    // Ads by Payment Status Chart
+    new Chart(document.getElementById("ads_by_payment_status"), {
+      type: "doughnut",
+      data: {
+        labels: {{ads_by_payment_labels | safe}},
+        datasets: [{
+          data: {{ads_by_payment_values | safe}},
+          backgroundColor: colors.backgroundColor,
+          borderColor: colors.borderColor,
+          borderWidth: 1
+        }]
+      },
+      options: chartOptions
+    });
+
+    // Campaigns by Niche Chart
+    new Chart(document.getElementById("campaign_by_niche"), {
+      type: "bar",
+      data: {
+        labels: {{campaign_by_niche_labels | safe}},
+        datasets: [{
+          label: "Number of Campaigns",
+          data: {{campaign_by_niche_values | safe}},
+          backgroundColor: colors.backgroundColor[1],
+          borderColor: colors.borderColor[1],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        ...chartOptions,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

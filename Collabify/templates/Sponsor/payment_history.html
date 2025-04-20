@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  .table-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    animation: fadeIn 0.5s ease-out;
+  }
+  .table-wrapper h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+    font-weight: 600;
+  }
+  .print-button {
+    background: transparent;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease;
+  }
+  .print-button:hover {
+    background-color: #f3f4f6;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  th {
+    background: #f8fafc;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #64748b;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  td {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  tbody tr {
+    transition: background 0.2s ease;
+  }
+  tbody tr:nth-child(even) {
+    background: #f8fafc;
+  }
+  tbody tr:hover {
+    background: #f1f5f9;
+  }
+  .wd-sm {
+    width: 40px;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @media print {
+    body {
+      background: white;
+      padding: 0;
+    }
+    .table-wrapper {
+      box-shadow: none;
+      padding: 1rem;
+    }
+    .print-button {
+      display: none;
+    }
+  }
+  @media (max-width: 768px) {
+    body {
+      padding: 1rem;
+    }
+    .table-wrapper {
+      padding: 1rem;
+    }
+    table {
+      display: block;
+      overflow-x: auto;
+    }
+    th, td {
+      white-space: nowrap;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="table-wrapper">
+  <button class="print-button" onclick="window.print()">
+    <h1>Transaction History</h1>
+  </button>
+  <table>
+    <thead>
+      <tr>
+        <th class="wd-sm">Sno.</th>
+        <th>Influencer Name</th>
+        <th>Platform</th>
+        <th>Campaign</th>
+        <th>Amount (in Rs.)</th>
+        <th>Date</th>
+        <th>Request Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for transaction in transactions %}
+      <tr>
+        <td>{{loop.index}}</td>
+        <td>{{transaction.influencer_name}}</td>
+        <td>{{transaction.influencer_platform}}</td>
+        <td>{{transaction.campaign_name}}</td>
+        <td>{{transaction.transaction.amount}}</td>
+        <td>{{transaction.transaction.date}}</td>
+        <td>{{transaction.transaction.request_type}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

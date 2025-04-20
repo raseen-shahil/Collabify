@@ -1,0 +1,501 @@
+{% extends "base.html" %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .nav-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.75rem;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .primary-btn {
+    background: #2563eb;
+    color: white;
+    border: 2px solid #2563eb;
+  }
+
+  .primary-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .primary-btn:hover {
+    color: #2563eb;
+  }
+
+  .primary-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+    border: 2px solid #dc2626;
+  }
+
+  .danger-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .danger-btn:hover {
+    color: #dc2626;
+  }
+
+  .danger-btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    min-height: calc(100vh - 72px);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  .stats {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stats::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .stats:hover {
+    transform: translateY(-5px);
+    border-color: #e5e7eb;
+  }
+
+  .stats:hover::before {
+    transform: scaleX(1);
+  }
+
+  .stats-heading {
+    color: #64748b;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .stats-data {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2563eb;
+    margin-bottom: 0.5rem;
+  }
+
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1.75fr 1fr;
+    gap: 1.5rem;
+    flex: 1;
+    min-height: 400px;
+  }
+
+  .chart-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .chart-container {
+    flex: 1;
+    position: relative;
+    min-height: 200px;
+  }
+
+  .links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding-top: 1rem;
+  }
+
+  .link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: white;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: #1f2937;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    border: 2px solid #e5e7eb;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #2563eb;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+    z-index: 0;
+  }
+
+  .link:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .link span {
+    z-index: 1;
+    transition: color 0.3s ease;
+  }
+
+  .link ion-icon {
+    z-index: 1;
+    transition: all 0.3s ease;
+  }
+
+  .link:hover span,
+  .link:hover ion-icon {
+    color: white;
+  }
+
+  .link:hover {
+    border-color: #2563eb;
+  }
+
+  @media (max-width: 1024px) {
+    .stats-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .charts-row {
+      grid-template-columns: 1fr;
+    }
+    
+    .chart-card {
+      min-height: auto;
+    }
+    
+    .chart-container {
+      min-height: 300px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .container {
+      padding: 1rem;
+    }
+    
+    .stats-row {
+      grid-template-columns: 1fr;
+    }
+    
+    .links {
+      grid-template-columns: 1fr;
+    }
+
+    .nav-actions {
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+
+    .top-nav {
+      padding: 0.75rem 1rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+<a href="{{ url_for('admin.dashboard') }}" class="brand-logo">Collabify</a>
+  
+  <div class="nav-actions">
+    <a href="{{ url_for('admin.view_influencers') }}" class="nav-btn primary-btn">
+      <ion-icon name="people-outline"></ion-icon>
+      View Influencers
+    </a>
+    <a href="{{ url_for('admin.view_campaigns') }}" class="nav-btn primary-btn">
+      <ion-icon name="megaphone-outline"></ion-icon>
+      View Campaigns
+    </a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">
+      <ion-icon name="log-out-outline"></ion-icon>
+      Logout
+    </a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="stats-row">
+    <div class="stats">
+      <h1 class="stats-heading">
+        <ion-icon name="people-outline"></ion-icon>
+        Total Users
+      </h1>
+      <h1 class="stats-data">{{ user_count }}</h1>
+    </div>
+    <div class="stats">
+      <h1 class="stats-heading">
+        <ion-icon name="star-outline"></ion-icon>
+        Total Influencers
+      </h1>
+      <h1 class="stats-data">{{ influencer_count }}</h1>
+    </div>
+    <div class="stats">
+      <h1 class="stats-heading">
+        <ion-icon name="business-outline"></ion-icon>
+        Total Sponsors
+      </h1>
+      <h1 class="stats-data">{{ sponsor_count }}</h1>
+    </div>
+    <div class="stats">
+      <h1 class="stats-heading">
+        <ion-icon name="megaphone-outline"></ion-icon>
+        Total Campaigns
+      </h1>
+      <h1 class="stats-data">{{ campaign_count }}</h1>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="chart-card">
+      <h2 class="stats-heading">Platform Overview</h2>
+      <div class="chart-container">
+        <canvas id="userChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2 class="stats-heading">Campaigns by Status</h2>
+      <div class="chart-container">
+        <canvas id="campaign_by_status"></canvas>
+      </div>
+      <div class="links">
+        <a class="link" href="{{ url_for('admin.influencer_stats') }}">
+          <span>Influencer Stats</span>
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </a>
+        <a class="link" href="{{ url_for('admin.sponsor_stats') }}">
+          <span>Sponsor Stats</span>
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </a>
+        <a class="link" href="{{ url_for('admin.campaign_stats') }}">
+          <span>Campaign Stats</span>
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </a>
+        <a class="link" href="{{ url_for('admin.transaction_stats') }}">
+          <span>Transaction Stats</span>
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<script>
+  const ctx = document.getElementById("userChart").getContext("2d");
+  var userChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Total Users", "Sponsors", "Influencers", "Campaigns", "Transactions", "Ad Requests"],
+      datasets: [{
+        label: "Total Number",
+        data: [{{user_count}}, {{sponsor_count}}, {{influencer_count}}, {{campaign_count}}, {{transaction_count}}, {{ad_request_count}}],
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 99, 132, 0.2)'
+        ],
+        borderColor: [
+          'rgba(75, 192, 192, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 99, 132, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  const campaign_by_status_ctx = document.getElementById("campaign_by_status").getContext("2d");
+  var campaign_by_status = new Chart(campaign_by_status_ctx, {
+    type: "pie",
+    data: {
+      labels: {{labels_campaign_by_status | safe}},
+      datasets: [{
+        data: {{values_campaign_by_status | safe}},
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)'
+        ],
+        hoverOffset: 16,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            boxWidth: 12,
+            padding: 8,
+            font: {
+              size: 11
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

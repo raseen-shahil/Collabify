@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    .top-nav {
+        background: white;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .brand-logo {
+        background: #2563eb;
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        text-decoration: none;
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    .nav-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .nav-btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 9999px;
+        border: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        background: #2563eb;
+        color: white;
+    }
+
+    .danger-btn {
+        background: #dc2626;
+    }
+
+    .content-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .col {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    }
+
+    h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        color: #1f2937;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+    }
+
+    th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+        font-weight: 600;
+        color: #4b5563;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .approve {
+        background: rgba(5, 150, 105, 0.1);
+        color: #059669;
+    }
+
+    .danger {
+        background: rgba(220, 38, 38, 0.1);
+        color: #dc2626;
+    }
+
+    .form-field {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-field label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #4b5563;
+    }
+
+    .form-field input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .negotiate-btn {
+        background: #1f2937;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .status-pending {
+        color: #d97706;
+    }
+
+    .status-rejected {
+        color: #dc2626;
+    }
+
+    .status-accepted {
+        color: #059669;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+        
+        .content-wrapper {
+            grid-template-columns: 1fr;
+        }
+        
+        .top-nav {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav class="top-nav">
+        <a href="{{ url_for('influencer.dashboard') }}" class="brand-logo">
+            AD<br>FL
+        </a>
+        <div class="nav-actions">
+            <a href="{{ url_for('influencer.viewCampaigns') }}" class="nav-btn">Find Campaigns</a>
+            <a href="{{ url_for('influencer.activeCampaigns') }}" class="nav-btn">Active Campaigns</a>
+            <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        <div class="col">
+            <h1>Ad Request Details</h1>
+            <table>
+                <tr>
+                    <th>Campaign</th>
+                    <td>{{ ad_request_details.campaign_name }}</td>
+                </tr>
+                <tr>
+                    <th>Sponsor</th>
+                    <td>{{ ad_request_details.user_name }}</td>
+                </tr>
+                <tr>
+                    <th>Requirements</th>
+                    <td>{{ad_request_details.ad_request.requirements}}</td>
+                </tr>
+                <tr>
+                    <th>Payment Amount</th>
+                    <td>{{ ad_request_details.ad_request.payment_amount }}</td>
+                </tr>
+                <tr>
+                    <th>Message</th>
+                    <td>{{ ad_request_details.ad_request.messages }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>{{ ad_request_details.ad_request.status }}</td>
+                </tr>
+            </table>
+
+            <div style="margin-top: 2rem;">
+                <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Current Offer: {{latest_price}}</h2>
+                <div class="action-buttons">
+                    <form action="{{ url_for('influencer.reject_ad_request', ad_request_id=ad_request_details.ad_request.id) }}" method="post">
+                        <button class="action-btn danger" type="submit">Reject</button>
+                    </form>
+                    <form action="{{ url_for('influencer.accept_ad_request', ad_request_id=ad_request_details.ad_request.id) }}" method="post">
+                        <input type="text" name="payment_amount" hidden value="{{latest_price}}" />
+                        <button class="action-btn approve" type="submit">Approve</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <h1>Negotiations</h1>
+            
+            {% if not negotiations or show_form %}
+            <form method="post" action="{{ url_for('influencer.make_ad_offer', ad_request_id=ad_request_details.ad_request.id) }}">
+                <div class="form-field">
+                    <label for="offer_amount">Counter Offer Amount</label>
+                    <input type="number" id="offer_amount" name="offer_amount" required />
+                </div>
+                <div style="text-align: right;">
+                    <button type="submit" class="negotiate-btn">Negotiate</button>
+                </div>
+            </form>
+            {% endif %}
+
+            <table style="margin-top: 2rem;">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Offer Amount</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for negotiation in negotiations %}
+                    <tr>
+                        <td class="status-{{negotiation.status.lower()}}">
+                            {{negotiation.status}}
+                        </td>
+                        <td>{{negotiation.offer_amount}}</td>
+                        <td>{{negotiation.created_at}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

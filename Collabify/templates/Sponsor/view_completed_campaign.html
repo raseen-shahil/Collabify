@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+  }
+
+  .top-nav {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    animation: slideDown 0.5s ease-out;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .brand-logo {
+    background: #2563eb;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-decoration: none;
+  }
+
+  .nav-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .nav-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 9999px;
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .primary-btn {
+    background: #2563eb;
+    color: white;
+  }
+
+  .secondary-btn {
+    background: #f3f4f6;
+    color: #1f2937;
+  }
+
+  .danger-btn {
+    background: #dc2626;
+    color: white;
+  }
+
+  .nav-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+  }
+
+  .campaign-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .card-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .card-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .campaign-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+  }
+
+  .campaign-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .campaign-table th,
+  .campaign-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .campaign-table th {
+    font-weight: 600;
+    color: #64748b;
+    background: #f8fafc;
+  }
+
+  .requests-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .requests-table th,
+  .requests-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .requests-table th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .requests-table tr:hover {
+    background: #f8fafc;
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-block;
+  }
+
+  .status-pending {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .status-accepted {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .status-rejected {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .notification {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: #1f2937;
+  }
+
+  .pending-nego {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .action-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #2563eb;
+    color: white;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .dashboard-container {
+      grid-template-columns: 1fr;
+      padding: 1rem;
+    }
+    
+    .campaign-table, .requests-table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="top-nav">
+  <div class="brand">
+    <a href="{{ url_for('sponsor.dashboard') }}" class="brand-logo">AD</a>
+  </div>
+  
+  <div class="nav-actions">
+    {% if campaign.flagged == False and user.flagged == False %}
+    <a href="{{ url_for('sponsor.browse_influencers', campaign_id=campaign.id) }}" class="nav-btn primary-btn">
+      Find Influencers
+      <ion-icon name="arrow-forward-sharp"></ion-icon>
+    </a>
+    {% endif %}
+    <a href="{{url_for('sponsor.view_completed_ad_requests', campaign_id=campaign.id)}}" class="nav-btn secondary-btn">
+      Completed Requests
+    </a>
+    <a href="{{ url_for('views.logout') }}" class="nav-btn danger-btn">Logout</a>
+  </div>
+</nav>
+
+<div class="dashboard-container">
+  <div class="campaign-card">
+    <div class="card-header">
+      <h1>Campaign Details</h1>
+    </div>
+    <table class="campaign-table">
+      <tbody>
+        <tr>
+          <th>Campaign Detail</th>
+          <th>Information</th>
+        </tr>
+        <tr>
+          <td>Name</td>
+          <td>{{ campaign.name }}</td>
+        </tr>
+        <tr>
+          <td>Description</td>
+          <td>{{ campaign.description }}</td>
+        </tr>
+        <tr>
+          <td>Start Date</td>
+          <td>{{ campaign.start_date.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        <tr>
+          <td>End Date</td>
+          <td>{{ campaign.end_date.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        <tr>
+          <td>Budget</td>
+          <td>₹{{ campaign.budget }}</td>
+        </tr>
+        <tr>
+          <td>Visibility</td>
+          <td>{{ campaign.visibility }}</td>
+        </tr>
+        <tr>
+          <td>Goals</td>
+          <td>{{ campaign.goals }}</td>
+        </tr>
+        <tr>
+          <td>Status</td>
+          <td>{{ campaign.status }}</td>
+        </tr>
+        {% if campaign.status == 'Incomplete' %}
+        <tr>
+          <td>Mark as Completed</td>
+          <td>
+            <form action="{{ url_for('sponsor.mark_completed', campaign_id=campaign.id) }}" method="post">
+              <button class="action-btn" type="submit">Complete</button>
+            </form>
+          </td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="campaign-card">
+    <div class="card-header">
+      <h1>Ad Requests</h1>
+    </div>
+    <table class="requests-table">
+      <thead>
+        <tr>
+          <th>Request Type</th>
+          <th>Influencer</th>
+          <th>Messages</th>
+          <th>Requirements</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Completion</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for request in ad_requests + campaign_requests %}
+        {% if not request.request.completion_confirmed %}
+        <tr>
+          <td>
+            {% if request.negotiations %}
+            <a href="{{ url_for('sponsor.viewRequest', ad_request_id=request.request.id, request_type=request.request_type) }}" 
+               class="notification {% if request.pending_found %}pending-nego{% endif %}">
+              {% if request.pending_found %}
+              <ion-icon name="notifications-sharp"></ion-icon>
+              {% else %}
+              <ion-icon name="checkmark-sharp"></ion-icon>
+              {% endif %}
+              {{ request.request_type }}
+            </a>
+            {% else %}
+            {{ request.request_type }}
+            {% endif %}
+          </td>
+          <td>{{ request.influencer_name }}</td>
+          <td>{{ request.request.messages }}</td>
+          <td>{{ request.request.requirements }}</td>
+          <td>₹{{ request.request.payment_amount }}</td>
+          <td>
+            <span class="status-badge {% if request.request.status == 'Pending' %}status-pending{% elif request.request.status == 'Accepted' %}status-accepted{% else %}status-rejected{% endif %}">
+              {{ request.request.status }}
+            </span>
+          </td>
+          <td>{{ request.request.completed }}</td>
+          {% if request.request.completed == True %}
+          <td>
+            <form action="{{ url_for('sponsor.confirm_completion', campaign_id=campaign.id, ad_request_id=request.request.id) }}" method="post">
+              <input type="text" name="request_type" value="{{ request.request_type }}" hidden>
+              <button class="action-btn" type="submit">Confirm</button>
+            </form>
+          </td>
+          {% endif %}
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
